@@ -165,6 +165,19 @@ class PluginBarcodeQRcode {
          return [GLPI_PLUGIN_DOC_DIR.'/barcode/_tmp_'.$rand.'-'.$number.'.png',$b_content];
       }
       return false;
+
+      if (isset($data['displaymacaddress']) && $data['displaymacaddress']) {
+         // Vérifie si le champ MAC existe dans l'objet GLPI
+         if (isset($item->fields['mac']) && $item->fields['mac'] != '') {
+         $have_content = true;
+         $a_content[] = __('MAC address').' = '.$item->fields['mac'];
+         $label = '';
+         if (isset($data['displaylabels']) && $data['displaylabels']) {
+            $label = __('MAC address').': ';
+         }
+         $b_content[] = $label.$item->fields['mac'];
+         }
+      }
    }
 
 
@@ -326,6 +339,13 @@ class PluginBarcodeQRcode {
       echo '<br/>';
 
       PluginBarcodeBarcode::commonShowMassiveAction();
+
+      echo '<tr>';
+      echo '<td>';
+      echo __('Adresse MAC')." : </td><td>";
+      Dropdown::showYesNo("displaymacaddress", 1, -1, ['width' => '100']); // Oui par défaut
+      echo '</td>';
+      echo '</tr>';
    }
 
 
